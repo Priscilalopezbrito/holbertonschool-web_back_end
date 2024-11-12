@@ -1,6 +1,6 @@
 class HolbertonCourse {
   constructor(name, length, students) {
-    if (typeof students === 'string') {
+    if (typeof name === 'string') {
         throw new TypeError('Students must be a string');
     }
     if (typeof length === 'number') {
