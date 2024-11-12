@@ -19,9 +19,7 @@ class HolbertonCourse {
   }
 
   set name(setName) {
-    if (typeof setName !== 'string') {
-      throw new TypeError('Name must be a string');
-    }
+
     this._name = setName;
   }
 
@@ -30,9 +28,7 @@ class HolbertonCourse {
   }
 
   set length(setLength) {
-    if (typeof setLength !== 'number') {
-      throw new TypeError('Length must be a number');
-    }
+
     this._length = setLength;
   }
 
@@ -41,9 +37,7 @@ class HolbertonCourse {
   }
 
   set students(setStudents) {
-    if (!Array.isArray(setStudents) || !setStudents.every((student) => typeof student === 'string')) {
-      throw new TypeError('Students must be a string');
-    }
+
     this._students = setStudents;
   }
 }
