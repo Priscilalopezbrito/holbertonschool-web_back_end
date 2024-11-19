@@ -1,5 +1,6 @@
+/* eslint-disable */
 export default function getResponseFromAPI() {
-    return new Promise((resolve, reject) => {
-        const completed = true;
-    });
+  return new Promise((resolve, reject) => {
+    const completed = true;
+  });
 }
