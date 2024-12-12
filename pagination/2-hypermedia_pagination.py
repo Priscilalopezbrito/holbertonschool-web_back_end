@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """ Simple helper function """
-from typing import Tuple, List
+from typing import Tuple, List, Dict
 import csv
+import math
 
 
 def index_range(page: int, page_size: int) -> Tuple[int, int]:
@@ -37,15 +38,16 @@ class Server:
 
         return self.__dataset
 
-    def get_page(self, page: int = 1, page_size: int = 10) -> List[List]:
+    def get_hyper(self, page: int = 1, page_size: int = 10) -> Dict:
         """
-         Get page of data
+        Get hypermedia of a given page.
 
-         Args:
-             page (int): Page number
-             page_size (int): Page size
+        Args:
+            page (int): Page number
+            page_size (int): Page size
+
         Returns:
-            List[List]: Page range
+            Dict: Hypermedia of a given page
         """
 
         # Verify that both arguments are integers greater than 0
@@ -58,5 +60,18 @@ class Server:
         dataset = self.dataset()  # Loaded dataset
         start = (page - 1) * page_size
         end = start + page_size
+        data = dataset[start:end]
 
-        return dataset[start:end]
+        total_records = len(dataset)
+        total_pages = math.ceil(total_records / page_size)
+        next_page = page + 1 if page < total_pages else None
+        prev_page = page - 1 if page > 1 else None
+
+        return {
+            "page_size": len(data),
+            "page": page,
+            "data": data,
+            "next_page": next_page,
+            "prev_page": prev_page,
+            "total_pages": total_pages
+        }
