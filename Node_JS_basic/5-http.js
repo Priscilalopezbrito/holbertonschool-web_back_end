@@ -12,9 +12,9 @@ const app = http.createServer(async (req, res) => {
   }
 
   if (req.url === '/students') {
+    res.write('This is the list of our students\n');
     try {
       const studentsOutput = await countStudents(path); // Ensure countStudents resolves a string
-      res.write('This is the list of our students\n');
       res.end(studentsOutput);
     } catch (error) {
       res.statusCode = 500;
