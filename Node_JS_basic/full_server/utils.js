@@ -29,8 +29,8 @@ function readDatabase(filePath) {
 
       return studentGroups;
     })
-    .catch((error) => {
-      throw new Error(error.message);
+    .catch(() => {
+      throw new Error('Cannot load the database');
     });
 }
 
