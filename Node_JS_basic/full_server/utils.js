@@ -1,30 +1,38 @@
-const fs = require('fs');
+import fs from 'fs/promises';
 
-function readDatabase(path) {
-  return new Promise((resolve, reject) => {
-    fs.readFile(path, 'utf8', (err, data) => {
-      if (err) {
-        reject(Error(err));
-        return;
+function readDatabase(filePath) {
+  return fs.readFile(filePath, 'utf8')
+    .then((data) => {
+      const lines = data.trim().split('\n');
+      const headers = lines.shift().split(',');
+      const fieldIndex = headers.indexOf('field');
+      const firstNameIndex = headers.indexOf('firstname');
+
+      if (fieldIndex === -1 || firstNameIndex === -1) {
+        throw new Error('Invalid CSV format');
       }
-      const content = data.toString().split('\n');
-
-      let students = content.filter((item) => item);
-
-      students = students.map((item) => item.split(','));
 
       const fields = {};
-      for (const i in students) {
-        if (i !== 0) {
-          if (!fields[students[i][3]]) fields[students[i][3]] = [];
 
-          fields[students[i][3]].push(students[i][0]);
+      for (const line of lines) {
+        const row = line.split(',');
+        const field = row[fieldIndex];
+        const firstName = row[firstNameIndex];
+
+        if (field && firstName) {
+          if (!fields[field]) {
+            fields[field] = [];
+          }
+          fields[field].push(firstName);
         }
       }
-      delete fields.field;
-      resolve(fields);
+
+      return fields;
+    })
+  // eslint-disable-next-line no-unused-vars
+    .catch((err) => {
+      throw new Error('Cannot load the database');
     });
-  });
 }
 
 export default readDatabase;
