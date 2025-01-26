@@ -1,4 +1,4 @@
-import fs from 'fs/promises';
+const fs = require('fs').promises;
 
 function readDatabase(filePath) {
   return fs.readFile(filePath, 'utf8')
@@ -12,7 +12,7 @@ function readDatabase(filePath) {
         throw new Error('Invalid CSV format');
       }
 
-      const fields = {};
+      const studentGroups = {};
 
       for (const line of lines) {
         const row = line.split(',');
@@ -20,19 +20,18 @@ function readDatabase(filePath) {
         const firstName = row[firstNameIndex];
 
         if (field && firstName) {
-          if (!fields[field]) {
-            fields[field] = [];
+          if (!studentGroups[field]) {
+            studentGroups[field] = [];
           }
-          fields[field].push(firstName);
+          studentGroups[field].push(firstName);
         }
       }
 
-      return fields;
+      return studentGroups;
     })
-  // eslint-disable-next-line no-unused-vars
-    .catch((err) => {
+    .catch(() => {
       throw new Error('Cannot load the database');
     });
 }
 
-export default readDatabase;
+module.exports = readDatabase;
