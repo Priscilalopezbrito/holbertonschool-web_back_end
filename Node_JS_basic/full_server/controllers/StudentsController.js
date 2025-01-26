@@ -1,4 +1,4 @@
-const readDatabase = require('../utils');
+import readDatabase from '../utils';
 
 class StudentsController {
   static async getAllStudents(req, res) {
@@ -12,9 +12,9 @@ class StudentsController {
         responseText += `Number of students in ${field}: ${students.length}. List: ${students.join(', ')}\n`;
       });
 
-      res.status(200).send(responseText.trim());
+      res.send(200, responseText.trim());
     } catch (error) {
-      res.status(500).send('Cannot load the database');
+      res.send(500, 'Cannot load the database');
     }
   }
 
@@ -22,7 +22,7 @@ class StudentsController {
     const { major } = req.params;
 
     if (major !== 'CS' && major !== 'SWE') {
-      res.status(500).send('Major parameter must be CS or SWE');
+      res.send(500, 'Major parameter must be CS or SWE');
       return;
     }
 
@@ -31,13 +31,13 @@ class StudentsController {
       const students = studentGroups[major];
 
       if (!students) {
-        res.status(200).send('List: ');
+        res.send(200, 'List: ');
         return;
       }
 
-      res.status(200).send(`List: ${students.join(', ')}`);
+      res.send(200, `List: ${students.join(', ')}`);
     } catch (error) {
-      res.status(500).send('Cannot load the database');
+      res.send(500, 'Cannot load the database');
     }
   }
 }

@@ -1,37 +1,30 @@
-const fs = require('fs').promises;
+const fs = require('fs');
 
-function readDatabase(filePath) {
-  return fs.readFile(filePath, 'utf8')
-    .then((data) => {
-      const lines = data.trim().split('\n');
-      const headers = lines.shift().split(',');
-      const fieldIndex = headers.indexOf('field');
-      const firstNameIndex = headers.indexOf('firstname');
-
-      if (fieldIndex === -1 || firstNameIndex === -1) {
-        throw new Error('Invalid CSV format');
+function readDatabase(path) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(path, 'utf8', (err, data) => {
+      if (err) {
+        reject(Error(err));
+        return;
       }
+      const content = data.toString().split('\n');
 
-      const studentGroups = {};
+      let students = content.filter((item) => item);
 
-      for (const line of lines) {
-        const row = line.split(',');
-        const field = row[fieldIndex];
-        const firstName = row[firstNameIndex];
+      students = students.map((item) => item.split(','));
 
-        if (field && firstName) {
-          if (!studentGroups[field]) {
-            studentGroups[field] = [];
-          }
-          studentGroups[field].push(firstName);
+      const fields = {};
+      for (const i in students) {
+        if (i !== 0) {
+          if (!fields[students[i][3]]) fields[students[i][3]] = [];
+
+          fields[students[i][3]].push(students[i][0]);
         }
       }
-
-      return studentGroups;
-    })
-    .catch(() => {
-      throw new Error('Cannot load the database');
+      delete fields.field;
+      resolve(fields);
     });
+  });
 }
 
-module.exports = readDatabase;
+export default readDatabase;
