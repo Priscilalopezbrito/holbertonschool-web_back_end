@@ -17,8 +17,7 @@ const app = http.createServer(async (req, res) => {
       const studentsOutput = await countStudents(path); // Ensure countStudents resolves a string
       res.end(studentsOutput);
     } catch (error) {
-      res.statusCode = 500;
-      res.end(`Error: ${error.message}`);
+      res.end('Cannot load the database');
     }
     return;
   }
